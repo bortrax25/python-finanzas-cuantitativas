@@ -1,7 +1,9 @@
 site_name: "Python para Finanzas Cuantitativas"
 site_description: "Curso completo de Python aplicado a finanzas cuantitativas. 43 unidades."
 site_author: "Bortrax25"
-site_url: "http://localhost:8000"
+site_url: "https://Bortrax25.github.io/python-finanzas-cuantitativas"
+repo_url: "https://github.com/Bortrax25/python-finanzas-cuantitativas"
+repo_name: "Bortrax25/python-finanzas-cuantitativas"
 
 theme:
   name: material
