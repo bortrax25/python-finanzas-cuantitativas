@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python para Finanzas Cuantitativas — Árbol de Aprendizaje</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  h1 {
+    text-align: center;
+    color: #58a6ff;
+    margin-bottom: 8px;
+    font-size: 20px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8b949e;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+  .tree {
+    max-width: 750px;
+    margin: 0 auto;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .phase {
+    margin-bottom: 12px;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #161b22;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .phase-header:hover { background: #1c2128; }
+  .arrow {
+    width: 18px;
+    font-size: 11px;
+    color: #8b949e;
+    transition: transform 0.2s;
+  }
+  .arrow.open { transform: rotate(90deg); }
+  .phase-icon { margin-right: 8px; font-size: 16px; }
+  .phase-name { color: #58a6ff; font-weight: 600; }
+  .phase-count { margin-left: auto; color: #8b949e; font-size: 11px; }
+  .units { display: none; border-top: 1px solid #21262d; }
+  .units.show { display: block; }
+  .unit {
+    display: flex;
+    align-items: center;
+    padding: 6px 16px 6px 46px;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    color: #c9d1d9;
+  }
+  .unit:hover { background: #1c2128; }
+  .unit-checkbox {
+    width: 14px; height: 14px;
+    border: 2px solid #30363d;
+    border-radius: 3px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: transparent;
+  }
+  .unit-checkbox.done {
+    background: #238636;
+    border-color: #238636;
+    color: #fff;
+  }
+  .unit-code { color: #8b949e; margin-right: 8px; }
+  .unit-name { flex: 1; }
+  .unit-badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 8px;
+    margin-left: 6px;
+  }
+  .badge-fund { background: #1f6feb22; color: #58a6ff; }
+  .badge-oop { background: #23863622; color: #3fb950; }
+  .badge-fin { background: #9e6a0322; color: #d2991d; }
+  .badge-proj { background: #a371f722; color: #a371f7; }
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 11px;
+    color: #8b949e;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .progress-bar-container {
+    max-width: 750px;
+    margin: 0 auto 20px;
+    background: #21262d;
+    border-radius: 6px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #238636, #3fb950);
+    width: 0%;
+    transition: width 0.3s;
+    border-radius: 6px;
+  }
+  .progress-text {
+    text-align: center;
+    font-size: 11px;
+    color: #8b949e;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌳 Python para Finanzas Cuantitativas</h1>
+<p class="subtitle">43 unidades · 11 fases · offline · inspirado en MIT</p>
+
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+<p class="progress-text" id="progressText">0 de 43 unidades completadas (0%)</p>
+
+<div class="tree" id="tree"></div>
+
+<div class="legend">
+  <div class="legend-item"><span class="unit-badge badge-fund">Fundamentos</span></div>
+  <div class="legend-item"><span class="unit-badge badge-oop">OOP</span></div>
+  <div class="legend-item"><span class="unit-badge badge-fin">Finanzas</span></div>
+  <div class="legend-item"><span class="unit-badge badge-proj">Proyectos</span></div>
+</div>
+
+<script>
+const phases = [
+  {
+    icon: '🔧', name: 'FASE 0 — Entorno y Herramientas',
+    units: [
+      { code: 'U00', name: 'Preparando tu entorno de trabajo profesional', badge: 'fund' },
+      { code: 'U01', name: 'Jupyter Notebooks y el flujo cuantitativo', badge: 'fund' }
+    ]
+  },
+  {
+    icon: '🧱', name: 'FASE 1 — Fundamentos con Contexto Financiero',
+    units: [
+      { code: 'U02', name: 'Variables, tipos de datos y el lenguaje de los mercados', badge: 'fund' },
+      { code: 'U03', name: 'Operadores: la aritmética de Wall Street', badge: 'fund' },
+      { code: 'U04', name: 'Entrada, salida y manejo de errores básico', badge: 'fund' },
+      { code: 'U05', name: 'Condicionales: reglas de negocio y señales de trading', badge: 'fund' },
+      { code: 'U06', name: 'Bucles: iterando sobre series de tiempo', badge: 'fund' }
+    ]
+  },
+  {
+    icon: '📊', name: 'FASE 2 — Estructuras de Datos para Finanzas',
+    units: [
+      { code: 'U07', name: 'Listas y tuplas: series de precios y registros financieros', badge: 'fund' },
+      { code: 'U08', name: 'Diccionarios: portafolios y datos estructurados', badge: 'fund' },
+      { code: 'U09', name: 'Conjuntos y strings avanzados para datos financieros', badge: 'fund' },
+      { code: 'U10', name: 'Archivos y datos: CSV, JSON y datos de mercado', badge: 'fund' }
+    ]
+  },
+  {
+    icon: '⚙️', name: 'FASE 3 — Funciones y Programación Profesional',
+    units: [
+      { code: 'U11', name: 'Funciones: construyendo tu librería financiera', badge: 'fund' },
+      { code: 'U12', name: 'Funciones avanzadas: lambda, decoradores y closures', badge: 'fund' },
+      { code: 'U13', name: 'Módulos, paquetes y arquitectura de proyecto', badge: 'fund' },
+      { code: 'U14', name: 'Manejo de errores y logging profesional', badge: 'fund' }
+    ]
+  },
+  {
+    icon: '🏛️', name: 'FASE 4 — Programación Orientada a Objetos',
+    units: [
+      { code: 'U15', name: 'Clases y objetos: modelando instrumentos financieros', badge: 'oop' },
+      { code: 'U16', name: 'Herencia y polimorfismo: jerarquía de instrumentos', badge: 'oop' },
+      { code: 'U17', name: 'Métodos especiales y data classes', badge: 'oop' },
+      { code: 'U18', name: 'Patrones de diseño en finanzas cuantitativas', badge: 'oop' }
+    ]
+  },
+  {
+    icon: '🔬', name: 'FASE 5 — Stack Científico',
+    units: [
+      { code: 'U19', name: 'NumPy: computación numérica de alto rendimiento', badge: 'fin' },
+      { code: 'U20', name: 'Pandas fundamentos: DataFrame como hoja de cálculo', badge: 'fin' },
+      { code: 'U21', name: 'Pandas avanzado: análisis de series financieras', badge: 'fin' },
+      { code: 'U22', name: 'Visualización financiera con Matplotlib y Plotly', badge: 'fin' },
+      { code: 'U23', name: 'Obtención de datos: APIs y web scraping financiero', badge: 'fin' }
+    ]
+  },
+  {
+    icon: '💰', name: 'FASE 6 — Matemáticas Financieras y Valoración',
+    units: [
+      { code: 'U24', name: 'Valor del dinero en el tiempo y renta fija', badge: 'fin' },
+      { code: 'U25', name: 'Análisis de estados financieros con Python', badge: 'fin' },
+      { code: 'U26', name: 'Valoración de empresas: DCF y comparables', badge: 'fin' },
+      { code: 'U27', name: 'Modelo LBO y Private Equity', badge: 'fin' },
+      { code: 'U28', name: 'Derivados: opciones y modelos de pricing', badge: 'fin' }
+    ]
+  },
+  {
+    icon: '📈', name: 'FASE 7 — Gestión de Portafolios y Riesgo',
+    units: [
+      { code: 'U29', name: 'Teoría moderna de portafolios (Markowitz)', badge: 'fin' },
+      { code: 'U30', name: 'Modelos de factores y asset pricing', badge: 'fin' },
+      { code: 'U31', name: 'Gestión de riesgo: VaR, CVaR y stress testing', badge: 'fin' },
+      { code: 'U32', name: 'Optimización avanzada de portafolios', badge: 'fin' }
+    ]
+  },
+  {
+    icon: '📐', name: 'FASE 8 — Métodos Cuantitativos y Econometría',
+    units: [
+      { code: 'U33', name: 'Probabilidad y distribuciones financieras', badge: 'fin' },
+      { code: 'U34', name: 'Series de tiempo: ARIMA y GARCH', badge: 'fin' },
+      { code: 'U35', name: 'Econometría financiera: regresión y panel data', badge: 'fin' },
+      { code: 'U36', name: 'SQL para datos financieros', badge: 'fin' }
+    ]
+  },
+  {
+    icon: '🤖', name: 'FASE 9 — ML y Trading Algorítmico',
+    units: [
+      { code: 'U37', name: 'ML para finanzas: fundamentos', badge: 'fin' },
+      { code: 'U38', name: 'ML avanzado: métodos cuantitativos', badge: 'fin' },
+      { code: 'U39', name: 'Algorithmic trading: estrategias y backtesting', badge: 'fin' },
+      { code: 'U40', name: 'Infraestructura y producción', badge: 'fin' }
+    ]
+  },
+  {
+    icon: '🚀', name: 'FASE 10 — Proyectos Profesionales',
+    units: [
+      { code: 'U41', name: 'Plataforma de análisis cuantitativo completa', badge: 'proj' },
+      { code: 'U42', name: 'Sistema de trading cuantitativo end-to-end', badge: 'proj' }
+    ]
+  }
+];
+
+const badgeClasses = { fund: 'badge-fund', oop: 'badge-oop', fin: 'badge-fin', proj: 'badge-proj' };
+const totalUnits = phases.reduce((s, p) => s + p.units.length, 0);
+
+function loadProgress() {
+  const saved = localStorage.getItem('python_finanzas_progress_v2');
+  return saved ? JSON.parse(saved) : {};
+}
+
+function saveProgress(progress) {
+  localStorage.setItem('python_finanzas_progress_v2', JSON.stringify(progress));
+}
+
+function updateProgressBar() {
+  const progress = loadProgress();
+  const done = Object.values(progress).filter(v => v).length;
+  const pct = Math.round((done / totalUnits) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' de ' + totalUnits + ' unidades completadas (' + pct + '%)';
+}
+
+function toggleUnit(code) {
+  const progress = loadProgress();
+  progress[code] = !progress[code];
+  saveProgress(progress);
+  updateProgressBar();
+  renderTree();
+}
+
+function renderTree() {
+  const progress = loadProgress();
+  const tree = document.getElementById('tree');
+  tree.innerHTML = '';
+
+  phases.forEach((phase, pi) => {
+    const div = document.createElement('div');
+    div.className = 'phase';
+    const doneUnits = phase.units.filter(u => progress[u.code]).length;
+    const total = phase.units.length;
+
+    div.innerHTML = `
+      <div class="phase-header" onclick="togglePhase(${pi})">
+        <span class="arrow open" id="arrow${pi}">▶</span>
+        <span class="phase-icon">${phase.icon}</span>
+        <span class="phase-name">${phase.name}</span>
+        <span class="phase-count">${doneUnits}/${total}</span>
+      </div>
+      <div class="units show" id="units${pi}">
+        ${phase.units.map(u => {
+          const done = progress[u.code] || false;
+          const b = u.badge;
+          return `
+            <div class="unit" onclick="event.stopPropagation(); toggleUnit('${u.code}')">
+              <div class="unit-checkbox${done ? ' done' : ''}">✓</div>
+              <span class="unit-code">${u.code}</span>
+              <span class="unit-name">${u.name}</span>
+              <span class="unit-badge ${badgeClasses[b]}">${u.badge.toUpperCase()}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    tree.appendChild(div);
+  });
+}
+
+function togglePhase(pi) {
+  const units = document.getElementById('units' + pi);
+  const arrow = document.getElementById('arrow' + pi);
+  units.classList.toggle('show');
+  arrow.classList.toggle('open');
+}
+
+renderTree();
+updateProgressBar();
+</script>
+</body>
+</html>

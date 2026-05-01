@@ -1,0 +1,191 @@
+site_name: "Python para Finanzas Cuantitativas"
+site_description: "Curso completo de Python aplicado a finanzas cuantitativas. 43 unidades."
+site_author: "Bortrax25"
+site_url: "http://localhost:8000"
+
+theme:
+  name: material
+  language: es
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  font:
+    text: Crimson Text
+    code: Fira Code
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+
+extra_css:
+  - assets/extra.css
+
+extra_javascript:
+  - assets/extra.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: "#"
+      toc_depth: 4
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang:
+        - es
+        - en
+  - glightbox
+  - minify:
+      minify_html: true
+
+extra:
+  generator: false
+
+nav:
+  - Inicio: index.md
+  - Progreso: progreso.md
+  - Glosario: glosario.md
+
+  - "Fase 0 — Entorno":
+    - fase-0/index.md
+    - "U00: Preparando tu Entorno Profesional": fase-0/U00-setup.md
+    - "U01: Jupyter Notebooks y Flujo Cuantitativo": fase-0/U01-jupyter.md
+
+  - "Fase 1 — Fundamentos":
+    - fase-1/index.md
+    - "U02: Variables, Tipos de Datos y Lenguaje de Mercados": fase-1/U02-variables-tipos.md
+    - "U03: Operadores — Aritmética de Wall Street": fase-1/U03-operadores.md
+    - "U04: Entrada, Salida y Manejo de Errores": fase-1/U04-io-errores.md
+    - "U05: Condicionales — Señales de Trading": fase-1/U05-condicionales.md
+    - "U06: Bucles — Series de Tiempo": fase-1/U06-bucles.md
+
+  - "Fase 2 — Estructuras de Datos":
+    - fase-2/index.md
+    - "U07: Listas y Tuplas": fase-2/U07-listas-tuplas.md
+    - "U08: Diccionarios — Portafolios": fase-2/U08-diccionarios.md
+    - "U09: Conjuntos y Strings para Datos Financieros": fase-2/U09-sets-strings.md
+    - "U10: Archivos — CSV, JSON, Datos de Mercado": fase-2/U10-archivos.md
+
+  - "Fase 3 — Funciones":
+    - fase-3/index.md
+    - "U11: Funciones — Tu Librería Financiera": fase-3/U11-funciones.md
+    - "U12: Lambda, Decoradores y Closures": fase-3/U12-funciones-avanzadas.md
+    - "U13: Módulos, Paquetes y Arquitectura": fase-3/U13-modulos-paquetes.md
+    - "U14: Errores y Logging Profesional": fase-3/U14-errores-logging.md
+
+  - "Fase 4 — OOP":
+    - fase-4/index.md
+    - "U15: Clases y Objetos — Instrumentos Financieros": fase-4/U15-clases-objetos.md
+    - "U16: Herencia y Polimorfismo": fase-4/U16-herencia.md
+    - "U17: Métodos Especiales y Data Classes": fase-4/U17-dunders-dataclasses.md
+    - "U18: Patrones de Diseño en Finanzas": fase-4/U18-patrones-diseno.md
+
+  - "Fase 5 — NumPy, Pandas, Viz":
+    - fase-5/index.md
+    - "U19: NumPy — Computación Numérica": fase-5/U19-numpy.md
+    - "U20: Pandas Fundamentos — DataFrames": fase-5/U20-pandas-fundamentos.md
+    - "U21: Pandas Avanzado — Series Financieras": fase-5/U21-pandas-avanzado.md
+    - "U22: Visualización — Matplotlib y Plotly": fase-5/U22-visualizacion.md
+    - "U23: APIs y Web Scraping Financiero": fase-5/U23-apis-datos.md
+
+  - "Fase 6 — Valoración":
+    - fase-6/index.md
+    - "U24: Valor del Dinero en el Tiempo y Renta Fija": fase-6/U24-tvm-renta-fija.md
+    - "U25: Análisis de Estados Financieros con Python": fase-6/U25-estados-financieros.md
+    - "U26: Valoración de Empresas — DCF": fase-6/U26-valoracion-dcf.md
+    - "U27: Modelo LBO — Leveraged Buyout": fase-6/U27-lbo.md
+    - "U28: Derivados — Opciones y Pricing": fase-6/U28-derivados.md
+
+  - "Fase 7 — Portafolios y Riesgo":
+    - fase-7/index.md
+    - "U29: Teoría Moderna de Portafolios (Markowitz)": fase-7/U29-mpt.md
+    - "U30: Modelos de Factores y Asset Pricing": fase-7/U30-factores.md
+    - "U31: Gestión de Riesgo — VaR y CVaR": fase-7/U31-riesgo.md
+    - "U32: Optimización Avanzada de Portafolios": fase-7/U32-optimizacion-avanzada.md
+
+  - "Fase 8 — Econometría":
+    - fase-8/index.md
+    - "U33: Probabilidad y Distribuciones Financieras": fase-8/U33-distribuciones.md
+    - "U34: Series de Tiempo — ARIMA y GARCH": fase-8/U34-series-tiempo.md
+    - "U35: Econometría Financiera — Panel Data": fase-8/U35-econometria.md
+    - "U36: SQL para Datos Financieros": fase-8/U36-sql.md
+
+  - "Fase 9 — ML y Trading":
+    - fase-9/index.md
+    - "U37: Machine Learning para Finanzas": fase-9/U37-ml-fundamentos.md
+    - "U38: ML Avanzado — XGBoost, Autoencoders": fase-9/U38-ml-avanzado.md
+    - "U39: Algorithmic Trading — Backtesting": fase-9/U39-algo-trading.md
+    - "U40: Infraestructura y Producción": fase-9/U40-infraestructura.md
+
+  - "Fase 10 — Proyectos":
+    - fase-10/index.md
+    - "U41: Plataforma de Análisis Cuantitativo": fase-10/U41-plataforma.md
+    - "U42: Sistema de Trading End-to-End": fase-10/U42-sistema-trading.md
+    - "U43: Recursos, Comunidad y Ruta Profesional": fase-10/U43-recursos-carrera.md
+
+  - Bibliografía: bibliografia.md
+
+  - Ejercicios:
+    - ejercicios/index.md
+    - "Fase 0": ejercicios/fase-0/index.md
+    - "Fase 1": ejercicios/fase-1/index.md
+    - "Fase 2": ejercicios/fase-2/index.md
+    - "Fase 3": ejercicios/fase-3/index.md
+    - "Fase 4": ejercicios/fase-4/index.md
+    - "Fase 5": ejercicios/fase-5/index.md
+    - "Fase 6": ejercicios/fase-6/index.md
+    - "Fase 7": ejercicios/fase-7/index.md
+    - "Fase 8": ejercicios/fase-8/index.md
+    - "Fase 9": ejercicios/fase-9/index.md
